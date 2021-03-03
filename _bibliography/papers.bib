@@ -1,70 +1,38 @@
 ---
 ---
 
-@string{aps = {American Physical Society,}}
-
-@book{einstein1956investigations,
-  title={Investigations on the Theory of the Brownian Movement},
-  author={Einstein, Albert},
-  year={1956},
-  publisher={Courier Corporation,}
+@misc{jethani2021learned,
+      title={Have We Learned to Explain?: How Interpretability Methods Can Learn to Encode Predictions in their Interpretations}, 
+      author={Neil Jethani and Mukund Sudarshan and Yindalon Aphinyanaphongs and Rajesh Ranganath},
+      year={2021},
+      eprint={2103.01890},
+      archivePrefix={arXiv},
+      primaryClass={stat.ML}
 }
 
-@article{einstein1950meaning,
-  abbr={AJP},
-  title={The meaning of relativity},
-  author={Einstein, Albert and Taub, AH},
-  journal={American Journal of Physics,},
-  volume={18},
-  number={6},
-  pages={403--404},
-  year={1950},
-  publisher={American Association of Physics Teachers,}
+@article{smilowitz2020myocardial,
+  title={Myocardial Injury in Adults Hospitalized With COVID-19},
+  author={Smilowitz, Nathaniel R and Jethani, Neil and Chen, Ji and Aphinyanaphongs, Yindalon and Zhang, Ruina and Dogra, Siddhant and Alviar, Carlos L and Keller, Norma and Razzouk, Louai and Quinones-Camacho, Adriana and others},
+  journal={Circulation},
+  volume={142},
+  number={24},
+  pages={2393--2395},
+  year={2020},
+  publisher={Am Heart Assoc}
 }
 
-@article{PhysRev.47.777,
-  abbr={PhysRev},
-  title={Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?},
-  author={Einstein, A. and Podolsky, B. and Rosen, N.},
-  abstract={In a complete theory there is an element corresponding to each element of reality. A sufficient condition for the reality of a physical quantity is the possibility of predicting it with certainty, without disturbing the system. In quantum mechanics in the case of two physical quantities described by non-commuting operators, the knowledge of one precludes the knowledge of the other. Then either (1) the description of reality given by the wave function in quantum mechanics is not complete or (2) these two quantities cannot have simultaneous reality. Consideration of the problem of making predictions concerning a system on the basis of measurements made on another system that had previously interacted with it leads to the result that if (1) is false then (2) is also false. One is thus led to conclude that the description of reality as given by a wave function is not complete.},
-  journal={Phys. Rev.,},
-  volume={47},
-  issue={10},
-  pages={777--780},
-  numpages={0},
-  year={1935},
-  month={May},
-  publisher=aps,
-  doi={10.1103/PhysRev.47.777},
-  url={http://link.aps.org/doi/10.1103/PhysRev.47.777},
-  html={https://journals.aps.org/pr/abstract/10.1103/PhysRev.47.777},
-  pdf={example_pdf.pdf},
-  selected={true}
-}
-
-@article{einstein1905molekularkinetischen,
-  title={{\"U}ber die von der molekularkinetischen Theorie der W{\"a}rme geforderte Bewegung von in ruhenden Fl{\"u}ssigkeiten suspendierten Teilchen},
-  author={Einstein, A.},
-  journal={Annalen der physik,},
-  volume={322},
-  number={8},
-  pages={549--560},
-  year={1905},
-  publisher={Wiley Online Library}
-}
-
-@article{einstein1905movement,
-  abbr={Ann. Phys.},
-  title={Un the movement of small particles suspended in statiunary liquids required by the molecular-kinetic theory 0f heat},
-  author={Einstein, A.},
-  journal={Ann. Phys.,},
-  volume={17},
-  pages={549--560},
-  year={1905}
-}
-
-@article{einstein1905electrodynamics,
-  title={On the electrodynamics of moving bodies},
-  author={Einstein, A.},
-  year={1905}
+@article{10.1093/jamiaopen/ooaa008,
+    author = {Major, Vincent J and Jethani, Neil and Aphinyanaphongs, Yindalon},
+    title = "{Estimating real-world performance of a predictive model: a case-study in predicting mortality}",
+    journal = {JAMIA Open},
+    volume = {3},
+    number = {2},
+    pages = {243-251},
+    year = {2020},
+    month = {04},
+    abstract = "{One primary consideration when developing predictive models is downstream effects on future model performance. We conduct experiments to quantify the effects of experimental design choices, namely cohort selection and internal validation methods, on (estimated) real-world model performance.Four years of hospitalizations are used to develop a 1-year mortality prediction model (composite of death or initiation of hospice care). Two common methods to select appropriate patient visits from their encounter history (backwards-from-outcome and forwards-from-admission) are combined with 2 testing cohorts (random and temporal validation). Two models are trained under otherwise identical conditions, and their performances compared. Operating thresholds are selected in each test set and applied to a “real-world” cohort of labeled admissions from another, unused year.Backwards-from-outcome cohort selection retains 25\\% of candidate admissions (n = 23 579), whereas forwards-from-admission selection includes many more (n = 92 148). Both selection methods produce similar performances when applied to a random test set. However, when applied to the temporally defined “real-world” set, forwards-from-admission yields higher areas under the ROC and precision recall curves (88.3\\% and 56.5\\% vs. 83.2\\% and 41.6\\%).A backwards-from-outcome experiment manipulates raw training data, simplifying the experiment. This manipulated data no longer resembles real-world data, resulting in optimistic estimates of test set performance, especially at high precision. In contrast, a forwards-from-admission experiment with a temporally separated test set consistently and conservatively estimates real-world performance.Experimental design choices impose bias upon selected cohorts. A forwards-from-admission experiment, validated temporally, can conservatively estimate real-world performance.The routine care of patients stands to benefit greatly from assistive technologies, including data-driven risk assessment. Already, many different machine learning and artificial intelligence applications are being developed from complex electronic health record data. To overcome challenges that arise from such data, researchers often start with simple experimental approaches to test their work. One key component is how patients (and their healthcare visits) are selected for the study from the pool of all patients seen. Another is how the group of patients used to create the risk estimator differs from the group used to evaluate how well it works. These choices complicate how the experimental setting compares to the real-world application to patients. For example, different selection approaches that depend on each patient’s future outcome can simplify the experiment but are impractical upon implementation as these data are unavailable. We show that this kind of “backwards” experiment optimistically estimates how well the model performs. Instead, our results advocate for experiments that select patients in a “forwards” manner and “temporal” validation that approximates training on past data and implementing on future data. More robust results help gauge the clinical utility of recent works and aid decision-making before implementation into practice. }",
+    issn = {2574-2531},
+    doi = {10.1093/jamiaopen/ooaa008},
+    url = {https://doi.org/10.1093/jamiaopen/ooaa008},
+    eprint = {https://academic.oup.com/jamiaopen/article-pdf/3/2/243/33532974/ooaa008.pdf},
 }
