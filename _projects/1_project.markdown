@@ -2,7 +2,7 @@
 layout: distill
 title: Learning Accurate ML Explainations with REAL-X and EVAL-X
 description: How do we efficeintly generate ML explainations we can trust?
-img: /assets/img/realx.png
+img: /assets/img/12.jpg
 importance: 1
 ---
 
