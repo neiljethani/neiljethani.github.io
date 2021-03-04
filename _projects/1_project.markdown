@@ -1,77 +1,157 @@
 ---
-layout: page
-title: project 1
-description: a project with a background image
+layout: distill
+title: Learning Accurate ML Explainations with REAL-X and EVAL-X
+description: How do we efficeintly generate ML explainations we can trust?
 img: /assets/img/12.jpg
 importance: 1
 ---
 
-Every project has a beautiful feature showcase page.
-It's easy to include images in a flexible 3-column grid format.
-Make your photos 1/3, 2/3, or full width.
+Lets begin with asking...
 
-To give your project a background in the portfolio page, just add the img tag to the front matter like so:
+## Why Do We Need Interpretability in Machine Learning?
 
-    ---
-    layout: page
-    title: project
-    description: a project with a background image
-    img: /assets/img/12.jpg
-    ---
+Machine learning models are now pervasive throughout society, often making life or death decisions (self-driving cards, diagnosing lung cancer) or performing super-human tasks (mastering the game of Go). Given this not only do we need to trust machine learning models, but we should aim to learn from them. 
 
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        <img class="img-fluid rounded z-depth-1" src="{{ '/assets/img/1.jpg' | relative_url }}" alt="" title="example image"/>
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        <img class="img-fluid rounded z-depth-1" src="{{ '/assets/img/3.jpg' | relative_url }}" alt="" title="example image"/>
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        <img class="img-fluid rounded z-depth-1" src="{{ '/assets/img/5.jpg' | relative_url }}" alt="" title="example image"/>
-    </div>
-</div>
-<div class="caption">
-    Caption photos easily. On the left, a road goes through a tunnel. Middle, leaves artistically fall in a hipster photoshoot. Right, in another hipster photoshoot, a lumberjack grasps a handful of pine needles.
-</div>
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        <img class="img-fluid rounded z-depth-1" src="{{ '/assets/img/5.jpg' | relative_url }}" alt="" title="example image"/>
-    </div>
-</div>
-<div class="caption">
-    This image can also have a caption. It's like magic.
-</div>
+*For the rest of this post, I would like us to imagine that we are physcians.*  
 
-You can also put regular text between your rows of images.
-Say you wanted to write a little bit about your project before you posted the rest of the images.
-You describe how you toiled, sweated, *bled* for your project, and then... you reveal it's glory in the next row of images.
+Physcians need to be able to interpret why clinical decisions are made by ML models.
+1. To trust treatment or diagnostic decisions made by models
+2. To identify model failure modes so they can defer to their own judgement
+3. To expand clinical knowledge
 
+It's natural to then ask...
+
+## What is an Explaination?
+
+A physician may want to understand which genes are invovled in diabetes. However, often physicians want more personalized infromation about their patient. Instead, it would be more useful to understand which of their patient's genes are contributing to their diabetes so they can more effectively develope treatment plans. 
+
+Accordingly, most interpretability methods focus on providing *local* explainations. *Local* or instance-wise explainations provide reasons for why a specfic decision was made. This is often accomplished by providing the feature importances related to that decision.
+
+Now let's answer...
+
+## What Do We Want in an Explaination?
+
+As physicians, we need to be able to make quick, accurate decisions in order to treat patient's effectively. Therefore, we want explainations that are...
+1. Fast
+2. Accurate/ High Fidelity
+3. Simple
+
+Now that we know we want...
+
+## Can We Have What We Want?
+
+Let's consider existing interpretability methods and break them into three groups: 
+
+|   | Gradient Based Methods    | Locally Linear Methods    | Perturbation Methods  |
+|:-:    |:-:    |:-:    |:-:    |
+| What?     | Measure the gradient of output   with respect to the input features?    | Uses a linear function of  simplified variables to explain  the prediction of a single input  | Perturb the inputs and observe  the effect on the target or  neurons within a network     |
+| Examples  | gradCAM, DeepLift   | LIME, SHAP    | Occlusion     |
+| Why (not)?    | Explanations don't optimize for accuracy/fidelity. Recent work shows estimates of  feature importance often do not  help identify features  that help predict the target anymore  than randomly assigned importances.     | This methods are slow, requiring numerous  perturbations of the input and/or  training a new model  to generate a single explanation.     | These methods are slow,  requiring numerous perturbations  to generate a single explanation.      |
+
+Of note, both locally linear and perturbation-based methods rely on removing or perturbing features in order to characterize how/if the model's prediction degrades. 
+While removing important features may affect the prediction of the model, so too can the artifacts introcuded by the removal or perturbation prodecure. 
+
+As a physician we would not want to use any of these methods, either because they lack fidelity or are too slow in point-of-care settings.
+
+## Is There Another Way? 
+
+Recently, *Amortized Explanation Methods (AEM)*  have been introduced to reduce the cost of providing model-agnostic explanations by learning a single global selector model that efficiently identifies the subset of locally important features in an instance of data with a single forward pass. 
+AEMs learn the global selector model by optimizing the fidelity of the explainations.
+
+Let's look at the following illustration, which examplifies an AEM:
 
 <div class="row justify-content-sm-center">
-    <div class="col-sm-8 mt-3 mt-md-0">
-        <img class="img-fluid rounded z-depth-1" src="{{ '/assets/img/6.jpg' | relative_url }}" alt="" title="example image"/>
-    </div>
-    <div class="col-sm-4 mt-3 mt-md-0">
-        <img class="img-fluid rounded z-depth-1" src="{{ '/assets/img/11.jpg' | relative_url }}" alt="" title="example image"/>
+    <div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded z-depth-1" src="{{ '/assets/img/aem.png' | relative_url }}" alt="" title="example AEM"/>
     </div>
 </div>
 <div class="caption">
-    You can also have artistically styled 2/3 + 1/3 images, like these.
 </div>
 
+Here the selector model ($q_{\text{sel}}$) plays a game where tries to select features which allow the predictor model ($q_{\text{pred}}$) to predict the target. 
+This game is captured by maximizing the following objective:
 
-The code is simple.
-Just wrap your images with `<div class="col-sm">` and place them inside `<div class="row">` (read more about the <a href="https://getbootstrap.com/docs/4.4/layout/grid/" target="_blank">Bootstrap Grid</a> system).
-To make images responsive, add `img-fluid` class to each; for rounded corners and shadows use `rounded` and `z-depth-1` classes.
-Here's the code for the last row of images above:
+$$
+\mathbb{E}_{x, y \sim F}\mathbb{E}_{s \sim q_{\text{sel}; \beta}(s \mid x ; \beta)}\left[\log q_{\text{pred}}(y \mid m(x, s) ; \theta) - \lambda R(s) \right].
+$$
 
-```html
+Here selector model ($q_{\text{sel}}$) is optimized to produce selections $s$ that maximize the likehood of the masked data $\log q_{\text{pred}}(y \mid m(x, s) ; \theta)$. 
+Then in order to ensure that the explaination is simple, as smaller features selections, the objective pays a penality for selecting each feature expressed as $\lambda R(s)$.
+
+
+You might be thinking...
+
+## Sounds Great! What's the Catch?
+
+Well, first we have to choose the predictor model.
+* Existing Prediction Model: <span style="color:red"> May not work well with the artificats introduced by the masking process (i.e. occulsion to 0.) text</span>
+* Train a New Model: <span style="color:red"> Need to be careful.</span>
+
+A few popular *joint amortized explanation methods (JAMs)* such as L2X and INVASE train a new predictor model by learning it jointly with selector model. 
+Now the selector and predictor model are playing the game together. 
+The selector model tries to select features and the preditor tries to use the masked feature selections to predict the target.
+
+Let's take a look at how this can go horribly wrong:
+
 <div class="row justify-content-sm-center">
-    <div class="col-sm-8 mt-3 mt-md-0">
-        <img class="img-fluid rounded z-depth-1" src="{{ '/assets/img/6.jpg' | relative_url }}" alt="" title="example image"/>
-    </div>
-    <div class="col-sm-4 mt-3 mt-md-0">
-        <img class="img-fluid rounded z-depth-1" src="{{ '/assets/img/11.jpg' | relative_url }}" alt="" title="example image"/>
+    <div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded z-depth-1" src="{{ '/assets/img/jam_encoding.png' | relative_url }}" alt="" title="JAM encoding"/>
     </div>
 </div>
-```
+<div class="caption">
+</div>
+
+In the above example, we see that JAMs can learn to encode predictions. Here the selector model can select a pixel on the left to indicate dog, and select a pixel on the right to indicate cat. Because, the predictor is trained jointly it can learn these encodings. 
+Now, remember that the objective penalizes us for each pixel/feature selection. This encoding solution allows for accurate predictions with just a single pixel selection, helping maximize the objective.
+
+As physicians, being presented with such nonsense will cause us to loose trust in the model. 
+We need a way to validate the fidelity of the explainations. 
+
+## Can We Evaluate the Explainations? (EVAL-X)
+
+Well, first we have to choose an evaluator model with which to evaluate the subset of important features identified by the interpretability method 
+* Existing Prediction Model: <span style="color:red"> May not work well with the artificats introduced by the masking process (i.e. occulsion to 0.). Restated, explaianations, provided as masked inputs, come from a different distribution than that on which the original model is trained. text</span> 
+* Train a New Model: <span style="color:red"> Need to be careful.</span>
+
+Are you getting de-ja-vu?
+
+Most popularly, RemOve And Retrain (ROAR) was introduced to evaluate selections. 
+ROAR retrains a model to make predictions from the explainations, provided as masked inputs. 
+However, JAMs can encode the prediction directly in th explaination. 
+ROAR would simply train a model to learn these encodings, incorrectly validating the explainations. 
+Are you getting de-ja-vu, again? 
+
+Instead, we recently introduced EVAL-X. 
+Lets look at how EVAL-X works.
+<div class="row justify-content-sm-center">
+    <div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded z-depth-1" src="{{ '/assets/img/evalx.png' | relative_url }}" alt="" title="EVAL-X"/>
+    </div>
+</div>
+<div class="caption">
+</div>
+EVAL-X works by training a new evaluation model to approximate the true probabilty of the target given any subset of features in the input. 
+EVAL-X adopts a simple training procedure to learn this model by randomly selecting features during training. 
+This procedure exposes the model to the same masking artifacts it will encounter during test time and ensures that the model cannot learn encodings.
+
+## REAL-X, Let us Explain! 
+
+Given that EVAL-X is robust to encodings and out-of-distribution artifacts, you might be wondering... is there a way use this approach to create a new AEM? 
+Accordingly, we recently introduced REAL-X a novel AEM!
+Lets look at how REAL-X works. (more de-ja-vu)
+<div class="row justify-content-sm-center">
+    <div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded z-depth-1" src="{{ '/assets/img/realx.png' | relative_url }}" alt="" title="REAL-X"/>
+    </div>
+</div>
+<div class="caption">
+</div>
+REAL-X works by first training a new predictor model to approximate the true probabilty of the target given any subset of features in the input using the same proceduer as EVAL-X. 
+REAL-X then trains to the selector model to select minimal feature subsets that maximize an aproximation of the true likelihood of the target given any subset of features.
+This prevents that the selector model from learning encodings.
+
+REAL-X accomplishes the following:
+1. Provides *fast* explainations with a single forward pass
+2. Maximizes the explaination *fidelity*
+3. Provides *simple* explainations by selecting the minimal set of important features. 
+
