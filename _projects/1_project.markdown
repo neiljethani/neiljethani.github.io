@@ -25,28 +25,28 @@ authors:
 
 ## Why Do We Need Interpretability in Machine Learning?
 
-Machine learning models are now pervasive throughout society, often making life or death decisions (self-driving cards, diagnosing lung cancer) or performing super-human tasks (mastering the game of Go). Given this not only do we need to trust machine learning models, but we should aim to learn from them. 
+Machine learning models are now pervasive throughout society, often making life or death decisions (self-driving cards, diagnosing lung cancer) or performing super-human tasks (mastering the game of Go). Given this, not only do we need to trust machine learning models, but we should aim to learn from them. 
 
-*For the rest of this post, I would like us to imagine that we are physcians.*  
+* I would like us to imagine that we are physicians.*  
 
-Physcians need to be able to interpret why clinical decisions are made by ML models.
-1. To trust treatment or diagnostic decisions made by models
-2. To identify model failure modes so they can defer to their own judgement
-3. To expand clinical knowledge
+Physicians need to be able to interpret why clinical decisions are made by ML models.
+1. To **trust** treatment or diagnostic decisions made by models
+2. To identify model **failure modes** so they can defer to their own judgement
+3. To expand clinical **knowledge**
 
 It's natural to then ask...
 
-## What is an Explaination?
+## What is an Explanation?
 
-A physician may want to understand which genes are invovled in diabetes. However, often physicians want more personalized infromation about their patient. Instead, it would be more useful to understand which of their patient's genes are contributing to their diabetes so they can more effectively develope treatment plans. 
+A physician may want to understand which genes are involved in diabetes. However, often physicians want more personalized information about their patient. Instead, it would be more useful to understand which of their patient's genes are contributing to their diabetes so they can more effectively develop treatment plans. 
 
-Accordingly, most interpretability methods focus on providing *local* explainations. *Local* or instance-wise explainations provide reasons for why a specfic decision was made. This is often accomplished by providing the feature importances related to that decision.
+Accordingly, most interpretability methods focus on providing *local* explanations. *Local* or instance-wise explanations provide reasons for why a specific decision was made. This is often accomplished by providing the feature importances related to that decision.
 
 Now let's answer...
 
-## What Do We Want in an Explaination?
+## What Do We Want in an Explanation?
 
-As physicians, we need to be able to make quick, accurate decisions in order to treat patient's effectively. Therefore, we want explainations that are...
+As physicians, we need to be able to make quick, accurate decisions in order to treat patient's effectively. Therefore, we want explanations that are...
 1. Fast
 2. Accurate/ High Fidelity
 3. Simple
@@ -64,16 +64,16 @@ Let's consider existing interpretability methods and break them into three group
 | Why (not)?    | Explanations don't optimize for accuracy/fidelity. Recent work shows estimates of  feature importance often do not  help identify features  that help predict the target anymore  than randomly assigned importances.     | This methods are slow, requiring numerous  perturbations of the input and/or  training a new model  to generate a single explanation.     | These methods are slow,  requiring numerous perturbations  to generate a single explanation.      |
 
 Of note, both locally linear and perturbation-based methods rely on removing or perturbing features in order to characterize how/if the model's prediction degrades. 
-While removing important features may affect the prediction of the model, so too can the artifacts introcuded by the removal or perturbation prodecure. 
+While removing important features may affect the prediction of the model, so too can the artifacts introduced by the removal or perturbation procedure. 
 
 As a physician we would not want to use any of these methods, either because they lack fidelity or are too slow in point-of-care settings.
 
 ## Is There Another Way? 
 
-Recently, *Amortized Explanation Methods (AEM)*  have been introduced to reduce the cost of providing model-agnostic explanations by learning a single global selector model that efficiently identifies the subset of locally important features in an instance of data with a single forward pass. 
-AEMs learn the global selector model by optimizing the fidelity of the explainations.
+Recently, *Amortized Explanation Methods (AEM)* have been introduced to reduce the cost of providing model-agnostic explanations by learning a single global selector model that efficiently identifies the subset of locally important features in an instance of data with a single forward pass. 
+AEMs learn the global selector model by optimizing the fidelity of the explanations.
 
-Let's look at the following illustration, which examplifies an AEM:
+Let's look at the following illustration, which exemplifies an AEM:
 
 <div class="row justify-content-sm-center">
     <div class="col-sm mt-3 mt-md-0">
@@ -83,28 +83,27 @@ Let's look at the following illustration, which examplifies an AEM:
 <div class="caption">
 </div>
 
-Here the selector model ($q_{\text{sel}}$) plays a game where tries to select features which allow the predictor model ($q_{\text{pred}}$) to predict the target. 
+Here the selector model ($q_{\text{sel}}$) plays a game where it tries to select features which allow the predictor model ($q_{\text{pred}}$) to predict the target. 
 This game is captured by maximizing the following objective:
 
 $$
 \mathbb{E}_{x, y \sim F}\mathbb{E}_{s \sim q_{\text{sel}; \beta}(s \mid x ; \beta)}\left[\log q_{\text{pred}}(y \mid m(x, s) ; \theta) - \lambda R(s) \right].
 $$
 
-Here selector model ($q_{\text{sel}}$) is optimized to produce selections $s$ that maximize the likehood of the masked data $\log q_{\text{pred}}(y \mid m(x, s) ; \theta)$. 
-Then in order to ensure that the explaination is simple, as smaller features selections, the objective pays a penality for selecting each feature expressed as $\lambda R(s)$.
-
+Here selector model ($q_{\text{sel}}$) is optimized to produce selections $s$ that maximize the likelihood of the masked data $\log q_{\text{pred}}(y \mid m(x, s) ; \theta)$. 
+Then in order to ensure that the explanation is simple (presents a small set of important features) the objective pays a penalty for selecting each feature expressed as $\lambda R(s)$.
 
 You might be thinking...
 
 ## Sounds Great! What's the Catch?
 
 Well, first we have to choose the predictor model.
-* Existing Prediction Model: <span style="color:red"> May not work well with the artificats introduced by the masking process (i.e. occulsion to 0.) text</span>
+* Existing Prediction Model: <span style="color:red"> May not work well with the artifacts introduced by the masking process (i.e. occlusion to 0.) text</span>
 * Train a New Model: <span style="color:red"> Need to be careful.</span>
 
 A few popular *joint amortized explanation methods (JAMs)* such as L2X and INVASE train a new predictor model by learning it jointly with selector model. 
 Now the selector and predictor model are playing the game together. 
-The selector model tries to select features and the preditor tries to use the masked feature selections to predict the target.
+The selector model tries to select features and the predictor tries to use the masked feature selections to predict the target.
 
 Let's take a look at how this can go horribly wrong:
 
@@ -116,24 +115,25 @@ Let's take a look at how this can go horribly wrong:
 <div class="caption">
 </div>
 
-In the above example, we see that JAMs can learn to encode predictions. Here the selector model can select a pixel on the left to indicate dog, and select a pixel on the right to indicate cat. Because, the predictor is trained jointly it can learn these encodings. 
-Now, remember that the objective penalizes us for each pixel/feature selection. This encoding solution allows for accurate predictions with just a single pixel selection, helping maximize the objective.
+In the above example, we see that JAMs can learn to encode predictions. Here the selector model can select a pixel on the left to indicate dog and select a pixel on the right to indicate cat. Because the predictor is trained jointly, it can learn these encodings. 
+Now, remember that the objective penalizes us for each pixel/feature selection. 
+This encoding solution allows for accurate predictions with just a single pixel selection, helping to maximize the objective.
 
-As physicians, being presented with such nonsense will cause us to loose trust in the model. 
-We need a way to validate the fidelity of the explainations. 
+As physicians, being presented with such nonsense will cause us to lose trust in the model. 
+We need a way to validate the fidelity of the explanations. 
 
-## Can We Evaluate the Explainations? (EVAL-X)
+## Can We Evaluate the Explanations? (EVAL-X)
 
 Well, first we have to choose an evaluator model with which to evaluate the subset of important features identified by the interpretability method 
-* Existing Prediction Model: <span style="color:red"> May not work well with the artificats introduced by the masking process (i.e. occulsion to 0.). Restated, explaianations, provided as masked inputs, come from a different distribution than that on which the original model is trained. text</span> 
+* Existing Prediction Model: <span style="color:red"> May not work well with the artifacts introduced by the masking process (i.e. occulsion to 0.). Restated, explanations, provided as masked inputs, come from a different distribution than that on which the original model is trained. </span> 
 * Train a New Model: <span style="color:red"> Need to be careful.</span>
 
 Are you getting de-ja-vu?
 
-Most popularly, RemOve And Retrain (ROAR) was introduced to evaluate selections. 
-ROAR retrains a model to make predictions from the explainations, provided as masked inputs. 
-However, JAMs can encode the prediction directly in th explaination. 
-ROAR would simply train a model to learn these encodings, incorrectly validating the explainations. 
+Popularly, RemOve And Retrain (ROAR) was introduced to evaluate selections. 
+ROAR retrains a model to make predictions from the explanations, provided as masked inputs. 
+However, JAMs can encode the prediction directly in the explanation. 
+ROAR would simply train a model to learn these encodings, incorrectly validating the explanations. 
 Are you getting de-ja-vu, again? 
 
 Instead, we recently introduced EVAL-X. 
@@ -145,14 +145,14 @@ Lets look at how EVAL-X works.
 </div>
 <div class="caption">
 </div>
-EVAL-X works by training a new evaluation model to approximate the true probabilty of the target given any subset of features in the input. 
+EVAL-X works by training a new evaluation model to approximate the true probability of the target given any subset of features in the input. 
 EVAL-X adopts a simple training procedure to learn this model by randomly selecting features during training. 
 This procedure exposes the model to the same masking artifacts it will encounter during test time and ensures that the model cannot learn encodings.
 
 ## REAL-X, Let us Explain! 
 
 Given that EVAL-X is robust to encodings and out-of-distribution artifacts, you might be wondering... is there a way use this approach to create a new AEM? 
-Accordingly, we recently introduced REAL-X a novel AEM!
+Accordingly, we recently introduced REAL-X, a novel AEM!
 Lets look at how REAL-X works. (more de-ja-vu)
 <div class="row justify-content-sm-center">
     <div class="col-sm mt-3 mt-md-0">
@@ -161,47 +161,48 @@ Lets look at how REAL-X works. (more de-ja-vu)
 </div>
 <div class="caption">
 </div>
-REAL-X works by first training a new predictor model to approximate the true probabilty of the target given any subset of features in the input using the same proceduer as EVAL-X. 
-REAL-X then trains to the selector model to select minimal feature subsets that maximize an aproximation of the true likelihood of the target given any subset of features.
+REAL-X works by first training a new predictor model to approximate the true probability of the target given any subset of features in the input using the same procedure as EVAL-X. 
+REAL-X then trains a selector model to select minimal feature subsets that maximizes the likelihood of the target, as measured by the EVAL-X style predictor model.
 This prevents that the selector model from learning encodings.
 
 REAL-X accomplishes the following:
-1. Provides *fast* explainations with a single forward pass
-2. Maximizes the explaination *fidelity*
-3. Provides *simple* explainations by selecting the minimal set of important features. 
+1. Provides *fast* explanations with a single forward pass
+2. Maximizes explanation *fidelity/accuracy*
+3. Provides *simple* explanations by selecting the minimal set of important features. 
 
 ## Do REAL-X and EVAL-X Really Work?
 
 Before we can even think about using REAL-X and EVAL-X in the clinic we need to test the following claims:
-1. REAL-X provides fast explainations **without encoding**
+1. REAL-X provides fast explanations **without encoding**
 2. EVAL-X can **detect encoding** issues
 
-To do so, lets see how REAL-X stacks up againsts other JAMs and see if EVAL-X can detect encodings. Well take a look at:
+To do so, lets see how REAL-X stacks up against other JAMs and see if EVAL-X can detect encodings. 
+Well take a look at:
 - L2X (Learning to Explain)
 - INVASE 
 - BASE-X (Copies REAL-X score function gradient estimation technique REBAR, but is a JAM that learns the selector and predictor models jointly)
 - FULL = A model trained on the full feature set.
 
-To make the comparision concrete, our goal is to provide *simple* explainations by selecting as few features as possible while retaining our ability to to predict. 
+To make the comparison concrete, our goal is to provide *simple* explanations by selecting as few features as possible while retaining our ability to predict. 
 Restated... 
 - We'll tune each method to select the fewest number of features while ensuring that the accuracy (ACC) is within 5% of the original model.
 
 ### Evaluation: 
 
 Each AEM we consider first makes selections, then uses those selections to predict the target using is predictor model.
-The predictive performance of the AEM is supposed to provide us with a metric of how good the explainations are. 
-We'll consider the following metrics: area under the reciever operator curve (**AUROC**) and accuracy (**ACC**).
+The predictive performance of the AEM is supposed to provide us with a metric of how good the explanations are. 
+We'll consider the following metrics: area under the receiver operator curve (**AUROC**) and accuracy (**ACC**).
 
-We'll also look at the predictions that EVAL-X produces given each method's explainations.
+We'll also look at the predictions that EVAL-X produces given each method's explanations.
 Lets denote these metrics with a prefix "e": **eAUROC** and **eACC**.
 
 > If the AEM is encoding, then we would expect *high* AUROC/ACC and *low* eAUROC/eACC.
 
 Now lets see how well each method is able to explain Chest X-Rays.
 
-### Cardiomegally Classification from Chest X-Rays
+### Cardiomegaly Classification from Chest X-Rays
 
-Cardiomegaly is characterized by an enlarged heart, and can be diagnosed by measuring the maximal horizontal diameter of the heart relative to that of the chest cavity and assessing the contour of the heart. 
+Cardiomegaly is characterized by an enlarged heart and can be diagnosed by measuring the maximal horizontal diameter of the heart relative to that of the chest cavity and assessing the contour of the heart. 
 Given this, we expect to see selections that establish the margins of the heart and chest cavity.
 
 We used the **The NIH ChestX-ray8 Dataset**
@@ -212,7 +213,7 @@ We used the **The NIH ChestX-ray8 Dataset**
 - Training: 50 epochs using a learning rate of .0001
 - Tunned the hyperparameter controlling the number of features selected for each method
 
-Let's take a look at some randomly selected explainations from each method. 
+Let's take a look at some randomly selected explanations from each method. 
 
 <div class="row justify-content-sm-center">
     <div class="col-sm mt-3 mt-md-0">
@@ -239,11 +240,11 @@ Now, lets see how they perform as mesured directly by the AEM and by EVAL-X:
 </div>
 <div class="caption">
 </div>
-Its clear to see that all the AEMs claim that their explainations are highly predictive based on ACC and AUROC. 
-However, EVAL-X is able to reveal that L2X, INVASE, and BASE-X are all encoding the predictions in their explainations, achieving eACC ~50%.
-Meanwhile, the slections made by REAL-X remain fairly predictive when evaluated by EVAL-X.
+Its clear to see that all the AEMs claim that their explanations are highly predictive based on ACC and AUROC. 
+However, EVAL-X is able to reveal that L2X, INVASE, and BASE-X are all encoding the predictions in their explanations, achieving eACC ~50%.
+Meanwhile, the sections made by REAL-X remain fairly predictive when evaluated by EVAL-X.
 
-Finally, we had to see what two expert radiologists thought of the explainations generated by each method.
+Finally, let’s look at what two expert radiologists thought of the explanations generated by each method.
 > We randomly selected 50 Chest X-rays from the test set and displayed the selections made by each method for each X-ray in a random order. The radiologists ranked the four options provided.
 
 <div class="row justify-content-sm-center">
@@ -255,7 +256,8 @@ Finally, we had to see what two expert radiologists thought of the explainations
     Average rankings by expert radiologists.
 </div>
 
-Looks like REAL-X is the #1 physcian recomended explaination method!
+Looks like REAL-X is the #1 physician recommended explanation method!
+
 
 ## How to Implement REAL-X Yourself?
 

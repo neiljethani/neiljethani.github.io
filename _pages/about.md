@@ -16,8 +16,9 @@ selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
 
-I am an MD/PhD candidate at the NYU Grossman School of Medicine. My work focuses on the building machine learning methods for healthcare. Specifically I am intested developing tools that help explain machine learning predictions to physicans and explanding the diagnostic utility of the ECG using machine learning. I am fortunate to be advised by Dr. Rajesh Ranganath and Dr. Yindalon Aphinyanaphongs.
+I am an MD/PhD candidate at the NYU Grossman School of Medicine. My work focuses on building machine learning tools for healthcare. Specifically, I am interested in developing methods that help explain machine learning predictions to physicians and expand the diagnostic utility of the ECG. I am fortunate to be advised by Dr. Rajesh Ranganath and Dr. Yindalon Aphinyanaphongs.
 
-Before graduate school, I earned a BS from the University of California, San Deigo in Bioengineering. As an undergraduate student, I worked on projects investigating biomaterials for biomimetic systems and analysing sequencing data.
+Before graduate school, I earned a BS from the University of California, San Diego in Bioengineering. As an undergraduate student, I worked on projects investigating biomaterials for biomimetic systems and analyzing sequencing data.
 
-In general, I try to have an active life outside of research. I enjoy doing anything that puts me in nature: hiking, biking, rock climbing, surfing, swimming. 
+In general, I try to have an active life outside of research. I enjoy doing anything that puts me in nature: hiking, biking, rock climbing, surfing, swimming, etc.
+
