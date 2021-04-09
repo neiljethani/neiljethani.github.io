@@ -20,36 +20,56 @@ authors:
     affiliations:
       name: NYU
 
+bibliography: realx.bib
 ---
 
 
 ## Why Do We Need Interpretability in Machine Learning?
 
-Machine learning models are now pervasive throughout society, often making life or death decisions (self-driving cards, diagnosing lung cancer) or performing super-human tasks (mastering the game of Go). Given this, not only do we need to trust machine learning models, but we should aim to learn from them. 
+Data is complicated. 
+Often it is difficult to make sense of complex patterns in the data, because the process by which it is generated remain unclear. 
+Instead, practitioners have turned to machine learning (ML) to help model these mechanisms. 
+Unfortunately, ML models are often too complex to understand. 
 
-* I would like us to imagine that we are physicians.*  
-
-Physicians need to be able to interpret why clinical decisions are made by ML models.
-1. To **trust** treatment or diagnostic decisions made by models
-2. To identify model **failure modes** so they can defer to their own judgement
-3. To expand clinical **knowledge**
+In medicine, we are beginning to see ML models perform tasks that physcians cannot. 
+For example, estimating EF using ECGs<d-cite key="Attia2019a"></d-cite> or predicting 60 day mortality<d-cite key="major2020estimating"></d-cite>. 
+Understanding how ML models can generate their predictions can help **expand clinical knowledge**. 
 
 It's natural to then ask...
 
-## What is an Explanation?
+## What is an Interpretation/Explanation?
 
+At a high level, explanations aim to provide users with an idea of what information is important for generating the model's prediction or the target of interest.
+
+One of the most active area of research in ML interpretability looks to provide users with explanations for a single prediction/target, by scoring the  influence of each feature in the input.
+However, it is important to consider what these scores mean when translating them to an explanation.
+
+Each interpretability method defines some mathematical operation, which provides their definition of interpretability 
+For example, take gradient-based explanations.
+Many of these, estimate the gradient of the prediction/target with respect to the input.
+Roughly, the gradient estimates how that model's output may change under very small perturbations to the input. 
+While, this may be useful, it is important to note that this is different from the identification of which features are the most important for generating the prediction/target.
+Recent work has shown this empirically<d-cite key="NIPS2019_9167"></d-cite>.
+
+<!-- 
 A physician may want to understand which genes are involved in diabetes. However, often physicians want more personalized information about their patient. Instead, it would be more useful to understand which of their patient's genes are contributing to their diabetes so they can more effectively develop treatment plans. 
 
-Accordingly, most interpretability methods focus on providing *local* explanations. *Local* or instance-wise explanations provide reasons for why a specific decision was made. This is often accomplished by providing the feature importances related to that decision.
+Accordingly, most interpretability methods focus on providing *local* explanations. *Local* or instance-wise explanations provide reasons for why a specific decision was made. This is often accomplished by providing the feature importances related to that decision. -->
 
 Now let's answer...
 
 ## What Do We Want in an Explanation?
 
 As physicians, we need to be able to make quick, accurate decisions in order to treat patient's effectively. Therefore, we want explanations that are...
-1. Fast
-2. Accurate/ High Fidelity
-3. Simple
+
+1. *Instancewise*
+- We want instancewise explanations for multiple reasons. Firstly, our data may be translationally invariant. For example, we may be interested in identifying cancer from histology images. Here, our explanation should identify cancerous cells regardless of their location within the image. Secondly, instancewise explanations allow for a more granular understanding of the data. In medicine, this may help provide personalized information.  
+1. *Accurate/ High Fidelity*
+- We want explanations that can reliably provide which features are the most important for generating the model prediction/target. 
+3. *Simple*
+- We want explanations that are simple enough to be interpreted by a human, both in terms of their presentation to a human and the mathematical concept conveyed by the explanation. 
+4. *Fast*
+- Providing a granular/personalized understanding of the data can be computationally challenging, however it allows for a more dynamic insights to be gained. For example, physicians may be able to develop insights from the changes in disease risk influenced by certain patient characteristics. Therefore, we want to be able to provide explanations that scale to large datasets and can be accessed in real-time. 
 
 Now that we know we want...
 
@@ -59,18 +79,18 @@ Let's consider existing interpretability methods and break them into three group
 
 |   | Gradient Based Methods    | Locally Linear Methods    | Perturbation Methods  |
 |:-:    |:-:    |:-:    |:-:    |
-| What?     | Measure the gradient of output   with respect to the input features?    | Uses a linear function of  simplified variables to explain  the prediction of a single input  | Perturb the inputs and observe  the effect on the target or  neurons within a network     |
-| Examples  | gradCAM, DeepLift   | LIME, SHAP    | Occlusion     |
-| Why (not)?    | Explanations don't optimize for accuracy/fidelity. Recent work shows estimates of  feature importance often do not  help identify features  that help predict the target anymore  than randomly assigned importances.     | This methods are slow, requiring numerous  perturbations of the input and/or  training a new model  to generate a single explanation.     | These methods are slow,  requiring numerous perturbations  to generate a single explanation.      |
+| What?     | Measure the gradient of output   with respect to the input features?    | Uses a linear function of  simplified variables to explain  the prediction of a single input  | Perturb the inputs and observe the effect on the target    |
+| Examples  | gradCAM<d-cite key="Selvaraju_2019"></d-cite>, DeepLift<d-cite key="Shrikumar2017"></d-cite>   | LIME<d-cite key="Ribeiro2016"></d-cite>, SHAP<d-cite key="Lundberg2017"></d-cite>    | Occlusion<d-cite key="Zeiler2014"></d-cite>     |
+| Why (not)?    | Explanations don't optimize for accuracy/fidelity. Recent work shows estimates of feature importance often do not identify features that help predict the target<d-cite key="NIPS2019_9167, adebayo2018sanity"></d-cite>.     | These methods are slow, requiring numerous perturbations of the input and/or training a new model per explanation. These perturbations may evaluate models where they are not grounded by data.    | These methods are slow, requiring numerous perturbations to generate a single explanation. These perturbations may evaluate models where they are not grounded by data.      |
 
 Of note, both locally linear and perturbation-based methods rely on removing or perturbing features in order to characterize how/if the model's prediction degrades. 
 While removing important features may affect the prediction of the model, so too can the artifacts introduced by the removal or perturbation procedure. 
 
-As a physician we would not want to use any of these methods, either because they lack fidelity or are too slow in point-of-care settings.
+As a physician we would not want to use any of these methods, either because they lack fidelity or are too slow to scale to large datasets or be deployed in point-of-care settings.
 
-## Is There Another Way? 
+## Is There Another Way?
 
-Recently, *Amortized Explanation Methods (AEM)* have been introduced to reduce the cost of providing model-agnostic explanations by learning a single global selector model that efficiently identifies the subset of locally important features in an instance of data with a single forward pass. 
+Recently, *Amortized Explanation Methods (AEM)*<d-cite key="Dabkowski2017, Chen2018, yoon2018invase, schwab2019cxplain"></d-cite> have been introduced to reduce the cost of providing model-agnostic explanations by learning a single global selector model that efficiently identifies the subset of locally important features in an instance of data with a single forward pass. 
 AEMs learn the global selector model by optimizing the fidelity of the explanations.
 
 Let's look at the following illustration, which exemplifies an AEM:
@@ -83,7 +103,7 @@ Let's look at the following illustration, which exemplifies an AEM:
 <div class="caption">
 </div>
 
-Here the selector model ($q_{\text{sel}}$) plays a game where it tries to select features which allow the predictor model ($q_{\text{pred}}$) to predict the target. 
+Here the selector model ($q_{\text{sel}}$) plays a *simple* game where it tries to select features which allow the predictor model ($q_{\text{pred}}$) to predict the target. 
 This game is captured by maximizing the following objective:
 
 $$
@@ -101,7 +121,7 @@ Well, first we have to choose the predictor model.
 * Existing Prediction Model: <span style="color:red"> May not work well with the artifacts introduced by the masking process (i.e. occlusion to 0.) text</span>
 * Train a New Model: <span style="color:red"> Need to be careful.</span>
 
-A few popular *joint amortized explanation methods (JAMs)* such as L2X and INVASE train a new predictor model by learning it jointly with selector model. 
+A few popular *joint amortized explanation methods (JAMs)* such as L2X<d-cite key="Chen2018"></d-cite> and INVASE<d-cite key="yoon2018invase"></d-cite> train a new predictor model by learning it jointly with selector model. 
 Now the selector and predictor model are playing the game together. 
 The selector model tries to select features and the predictor tries to use the masked feature selections to predict the target.
 
@@ -130,7 +150,7 @@ Well, first we have to choose an evaluator model with which to evaluate the subs
 
 Are you getting de-ja-vu?
 
-Popularly, RemOve And Retrain (ROAR) was introduced to evaluate selections. 
+Popularly, RemOve And Retrain (ROAR)<d-cite key="NIPS2019_9167"></d-cite> was introduced to evaluate selections. 
 ROAR retrains a model to make predictions from the explanations, provided as masked inputs. 
 However, JAMs can encode the prediction directly in the explanation. 
 ROAR would simply train a model to learn these encodings, incorrectly validating the explanations. 
@@ -178,14 +198,15 @@ Before we can even think about using REAL-X and EVAL-X in the clinic we need to 
 
 To do so, lets see how REAL-X stacks up against other JAMs and see if EVAL-X can detect encodings. 
 Well take a look at:
-- L2X (Learning to Explain)
-- INVASE 
+- L2X (Learning to Explain)<d-cite key="Chen2018"></d-cite> 
+- INVASE<d-cite key="yoon2018invase"></d-cite>
 - BASE-X (Copies REAL-X score function gradient estimation technique REBAR, but is a JAM that learns the selector and predictor models jointly)
 - FULL = A model trained on the full feature set.
 
 To make the comparison concrete, our goal is to provide *simple* explanations by selecting as few features as possible while retaining our ability to predict. 
-Restated... 
-- We'll tune each method to select the fewest number of features while ensuring that the accuracy (ACC) is within 5% of the original model.
+Fundamentally, theres a trade-off between how **simple** the explanation in term of the number of features selected and how much these features help with the prediction problem.
+This is a choice the practitioner has to make.
+- We chose to tune each method to select the fewest number of features while ensuring that the accuracy (ACC) is within 5% of the original model.
 
 ### Evaluation: 
 
@@ -205,7 +226,7 @@ Now lets see how well each method is able to explain Chest X-Rays.
 Cardiomegaly is characterized by an enlarged heart and can be diagnosed by measuring the maximal horizontal diameter of the heart relative to that of the chest cavity and assessing the contour of the heart. 
 Given this, we expect to see selections that establish the margins of the heart and chest cavity.
 
-We used the **The NIH ChestX-ray8 Dataset**
+We used the **The NIH ChestX-ray8 Dataset**<d-cite key="Wang_2017"></d-cite>
 - Subset of 5, 600 X-rays = 2,776 Cardiomegaly and 2,824 Normal
 - 5,000: 300: 300 Train, Val, Test Split
 - UNet Selector and DenseNet121 Predictor 
@@ -217,12 +238,12 @@ Let's take a look at some randomly selected explanations from each method.
 
 <div class="row justify-content-sm-center">
     <div class="col-sm mt-3 mt-md-0">
-        <img class="img-fluid rounded" src="{{ '/assets/img/cxr_1.png' | relative_url }}" alt="" title="CXR_1"/>
+        <img class="img-fluid rounded" src="{{ '/assets/img/cxr_2.png' | relative_url }}" alt="" title="CXR_2"/>
     </div>
 </div>
 <div class="row justify-content-sm-center">
     <div class="col-sm mt-3 mt-md-0">
-        <img class="img-fluid rounded" src="{{ '/assets/img/cxr_2.png' | relative_url }}" alt="" title="CXR_2"/>
+        <img class="img-fluid rounded" src="{{ '/assets/img/cxr_1.png' | relative_url }}" alt="" title="CXR_1"/>
     </div>
 </div>
 
@@ -324,3 +345,14 @@ y_eval = realx.evaluate(x_test, batch_size)
 eAUROC = roc_auc_score(y_test, y_eval, 'micro')
 eACC = accuracy_score(y_test.argmax(1), y_eval.argmax(1))
 </d-code>
+
+
+<script type="text/bibliography">
+  @article{gregor2015draw,
+    title={DRAW: A recurrent neural network for image generation},
+    author={Gregor, Karol and Danihelka, Ivo and Graves, Alex and Rezende, Danilo Jimenez and Wierstra, Daan},
+    journal={arXivreprint arXiv:1502.04623},
+    year={2015},
+    url={https://arxiv.org/pdf/1502.04623.pdf},
+  }
+</script>
