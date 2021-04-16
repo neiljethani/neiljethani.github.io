@@ -32,13 +32,22 @@ Finally, we show how Real-X and Eval-X meet the desiderata by allowing users to 
 ### Why Do We Need Interpretability in Machine Learning?
 
 Data is complicated. 
-Often it is difficult to make sense of complex patterns in the data, because the process by which it is generated remain unclear. 
+Often it is difficult to make sense of complex patterns in the data, because the process by which it is generated remains unclear. 
 Instead, practitioners have turned to machine learning to help model these mechanisms. 
 Unfortunately, ML models are often too complex to understand. 
 
 In medicine, we are beginning to see ML models perform tasks that physicians cannot. 
 For example, estimating EF using ECGs<d-cite key="Attia2019a"></d-cite> or predicting 60 day mortality<d-cite key="major2020estimating"></d-cite>. 
 Understanding how ML models can generate their predictions can help expand clinical knowledge. 
+
+<div class="row justify-content-sm-center">
+    <div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded" src="{{ '/assets/img/why_interpret.png' | relative_url }}" alt="" title="Why Interpret"/>
+    </div>
+</div>
+<div class="caption">
+Understanding ML models can expand clinical knowledge. If we have a model that predicts a future myocardial infarction (heart attack) from a patient's ECG, understanding how/why can help expand our understanding of electrophysiology.
+</div>
 
 It's natural to then ask...
 
