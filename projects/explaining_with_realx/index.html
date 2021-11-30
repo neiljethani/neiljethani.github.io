@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<title>Neil  Jethani | Learning Accurate ML Explanations with Real-X and Eval-X</title>
+<meta name="description" content="">
+
+<!-- Open Graph -->
+
+
+<!-- Bootstrap & MDB -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" integrity="sha512-MoRNloxbStBcD8z3M/2BmnT+rg4IsMxPkXaGh2zD6LGNNFE80W3onsAhRcMAMrSoyWL9xD7Ert0men7vR8LUZg==" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" integrity="sha512-RO38pBRxYH3SoOprtPTD86JFOclM51/XTIdEPh5j8sj4tp8jmQIx26twG52UaLi//hQldfrh7e51WzP9wuP32Q==" crossorigin="anonymous" />
+
+<!-- Fonts & Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"  integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.0/css/academicons.min.css" integrity="sha512-W4yqoT1+8NLkinBLBZko+dFB2ZbHsYLDdr50VElllRcNt2Q4/GSs6u71UHKxB7S6JEMCp5Ve4xjh3eGQl/HRvg==" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons">
+
+<!-- Code Syntax Highlighting -->
+<link rel="stylesheet" href="https://gitcdn.link/repo/jwarby/jekyll-pygments-themes/master/github.css" />
+
+<!-- Styles -->
+<link rel="shortcut icon" href="/assets/img/favicon.ico">
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<link rel="canonical" href="/projects/explaining_with_realx/">
+
+<!-- JQuery -->
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+
+
+<!-- Theming-->
+
+
+
+
+
+
+    
+<!-- MathJax -->
+<script type="text/javascript">
+  window.MathJax = {
+    tex: {
+      tags: 'ams'
+    }
+  };
+</script>
+<script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js"></script>
+<script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+    <script src="/assets/js/distillpub/template.v2.js"></script>
+    <script src="/assets/js/distillpub/transforms.v2.js"></script>
+    
+  </head>
+
+  <d-front-matter>
+    <script async type="text/json">{
+      "title": "Learning Accurate ML Explanations with Real-X and Eval-X",
+      "description": "How do we efficiently generate ML explanations we can trust?",
+      "published": "",
+      "authors": [
+        
+        {
+          "author": "Neil Jethani",
+          "authorURL": "",
+          "affiliations": [
+            {
+              "name": "NYU Langone Health, NYU",
+              "url": ""
+            }
+          ]
+        },
+        
+        {
+          "author": "Mukund Sudarshan",
+          "authorURL": "",
+          "affiliations": [
+            {
+              "name": "NYU",
+              "url": ""
+            }
+          ]
+        },
+        
+        {
+          "author": "Yin Aphinyanaphongs",
+          "authorURL": "",
+          "affiliations": [
+            {
+              "name": "NYU Langone Health",
+              "url": ""
+            }
+          ]
+        },
+        
+        {
+          "author": "Rajesh Ranganath",
+          "authorURL": "",
+          "affiliations": [
+            {
+              "name": "NYU",
+              "url": ""
+            }
+          ]
+        }
+        
+      ],
+      "katex": {
+        "delimiters": [
+          {
+            "left": "$",
+            "right": "$",
+            "display": false
+          },
+          {
+            "left": "$$",
+            "right": "$$",
+            "display": true
+          }
+        ]
+      }
+    }</script>
+  </d-front-matter>
+
+  <body class="fixed-top-nav ">
+
+    <!-- Header -->
+
+    <header>
+
+    <!-- Nav Bar -->
+    <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top">
+    <div class="container">
+      
+      <a class="navbar-brand title font-weight-lighter" href="/">
+       <span class="font-weight-bold">Neil</span>   Jethani
+      </a>
+      
+      <!-- Navbar Toggle -->
+      <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar top-bar"></span>
+        <span class="icon-bar middle-bar"></span>
+        <span class="icon-bar bottom-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse text-right" id="navbarNav">
+        <ul class="navbar-nav ml-auto flex-nowrap">
+          <!-- About -->
+          <li class="nav-item ">
+            <a class="nav-link" href="/">
+              about
+              
+            </a>
+          </li>
+          
+          <!-- Other pages -->
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <li class="nav-item ">
+              <a class="nav-link" href="/projects/">
+                projects
+                
+              </a>
+          </li>
+          
+          
+          
+          <li class="nav-item ">
+              <a class="nav-link" href="/publications/">
+                publications
+                
+              </a>
+          </li>
+          
+          
+          <!-- CV link -->
+          <li class="nav-item ">
+            <a class="nav-link" href="/assets/pdf/njethani_CV.pdf">
+              vitae
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+</header>
+
+
+    <!-- Content -->
+
+    <div class="post distill">
+
+      <d-title>
+        <h1>Learning Accurate ML Explanations with Real-X and Eval-X</h1>
+        <p>How do we efficiently generate ML explanations we can trust?</p>
+      </d-title>
+
+      <d-byline></d-byline>
+
+      <d-article>
+        <p>Machine learning models can capture complex relationships in the data that we as humans cannot. 
+Perhaps there is a way to explain these models back to humans in order to help humans make high stakes decisions or learn something new.</p>
+
+<p>When I was working on estimating ejection fraction (a measure of how well the heart pumps blood) using patient electrocardiograms (ECGs), we wanted to understand how our machine learning model was able to estimate ejection fraction. 
+I was told that physician’s wouldn’t be able to make such an estimation from ECGs alone, and I thought that if we could explain which parts of the ECG were influencing the model’s decision, then together we could uncover something new. 
+However, when attempting to explain my model/data, I ran into a few problems, which I have attempted to capture in the figure below.</p>
+
+<div class="row justify-content-sm-center">
+    <div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded" src="/assets/img/realx_blog.png" alt="" title="Why Interpret" />
+    </div>
+</div>
+<div class="caption">
+Understanding ML models can expand clinical knowledge. If we have a model that estimates heart functioning from a patient's ECG, understanding how/why can help expand our understanding of electrophysiology.
+</div>
+
+<p>Firstly, ECGs are highly variable and complex, so we needed unique, personalized explanations for each ECG, which was not a quick process.
+However, my biggest issue was that I was in unknown territory and couldn’t be sure if any of the explanations generated were reasonable or could be trusted.
+Trusting the model was important, but trusting the explanation was even more important.</p>
+
+<p>As pictured above, explanations identify which regions of the ECG are “important” using some mathematical operation.
+However, I wasn’t sure if these mathematical operations could be translated into something clinically relevant. 
+For example, are large gradients for certain regions of the ECG clinically significant?
+Further, does the data support, with high fidelity, the conclusion that the important regions identified by the explanation method drive the estimation of ejection fraction?</p>
+
+<h3 id="why-do-we-need-interpretability-in-machine-learning">Why Do We Need Interpretability in Machine Learning?</h3>
+
+<p>Data is complicated. 
+Often it is difficult to make sense of complex patterns in the data, because the process by which it is generated remains unclear. 
+Instead, practitioners have turned to machine learning to help model these mechanisms. 
+Unfortunately, ML models are often too complex to understand.</p>
+
+<p>In medicine, we are beginning to see ML models perform tasks that physicians cannot. 
+For example, as discussed, estimating estimating ejection fraction using ECGs<d-cite key="Attia2019a"></d-cite> or predicting 60 day mortality<d-cite key="major2020estimating"></d-cite>. 
+Understanding how ML models can generate their predictions can help expand clinical knowledge.</p>
+
+<p>It’s natural to then ask…</p>
+
+<h3 id="what-is-an-interpretationexplanation">What is an Interpretation/Explanation?</h3>
+
+<p>At a high level, explanations aim to provide users with an idea of what information is important for generating the model’s prediction or the target of interest.</p>
+
+<p>One of the most active area of research in ML interpretability looks to provide users with explanations for a single prediction/target, by scoring the influence of each feature in the input.
+However, it is important to consider what these scores mean when translating them to an explanation.</p>
+
+<p>Each interpretability method defines some mathematical operation, which provides their definition of interpretability. 
+For example, take gradient-based explanations.
+Many of these, estimate the gradient of the prediction/target with respect to the input.
+Roughly, the gradient estimates how that model’s output may change under very small perturbations to the input. 
+While, this may be useful, it is important to note that this is different from the identification of which features are the most important for generating the prediction/target.
+Recent work has shown this empirically<d-cite key="NIPS2019_9167"></d-cite>.</p>
+
+<!-- 
+A physician may want to understand which genes are involved in diabetes. However, often physicians want more personalized information about their patient. Instead, it would be more useful to understand which of their patient's genes are contributing to their diabetes so they can more effectively develop treatment plans. 
+
+Accordingly, most interpretability methods focus on providing local explanations. Local or instance-wise explanations provide reasons for why a specific decision was made. This is often accomplished by providing the feature importances related to that decision. -->
+
+<p>Now let’s answer…</p>
+
+<h3 id="what-do-we-want-in-an-explanation">What Do We Want in an Explanation?</h3>
+
+<p>Physicians, for example, need to be able to make quick, accurate decisions in order to treat patient’s effectively. Based on our experience working with ECGs, we complied the follow list of wants, alluded to in the figure above:</p>
+
+<ol>
+  <li>Instancewise (aka Personalized)
+    <ul>
+      <li>We want instancewise explanations for multiple reasons. Firstly, our data may be translationally invariant. For example, we may be interested in identifying cancer from histology images. Here, our explanation should identify cancerous cells regardless of their location within the image. Secondly, instancewise explanations allow for a more granular understanding of the data. In medicine, this may help provide personalized information.</li>
+    </ul>
+  </li>
+  <li>Accurate/ High Fidelity
+    <ul>
+      <li>We want explanations that can reliably provide which features are the most important for generating the model prediction/target.</li>
+    </ul>
+  </li>
+  <li>Simple
+    <ul>
+      <li>We want explanations that are simple enough to be interpreted by a human, both in terms of their presentation to a human and the mathematical concept conveyed by the explanation.</li>
+    </ul>
+  </li>
+  <li>Fast
+    <ul>
+      <li>Providing a granular/personalized understanding of the data can be computationally challenging, however it allows for a more dynamic insights to be gained. Therefore, we want to be able to provide explanations that scale to large datasets and can be accessed in real-time.</li>
+    </ul>
+  </li>
+</ol>
+
+<p>Now that we know we want…</p>
+
+<h3 id="can-we-have-what-we-want">Can We Have What We Want?</h3>
+
+<p>Let’s consider existing interpretability methods and break them into three groups:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"> </th>
+      <th style="text-align: center">Gradient Based Methods</th>
+      <th style="text-align: center">Locally Linear Methods</th>
+      <th style="text-align: center">Perturbation Methods</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">What?</td>
+      <td style="text-align: center">Measure the gradient of output   with respect to the input features?</td>
+      <td style="text-align: center">Uses a linear function of  simplified variables to explain  the prediction of a single input</td>
+      <td style="text-align: center">Perturb the inputs and observe the effect on the target</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Examples</td>
+      <td style="text-align: center">gradCAM<d-cite key="Selvaraju_2019"></d-cite>, DeepLift<d-cite key="Shrikumar2017"></d-cite></td>
+      <td style="text-align: center">LIME<d-cite key="Ribeiro2016"></d-cite>, SHAP<d-cite key="Lundberg2017"></d-cite></td>
+      <td style="text-align: center">Occlusion<d-cite key="Zeiler2014"></d-cite></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Why (not)?</td>
+      <td style="text-align: center">Explanations don’t optimize for accuracy/fidelity. Recent work shows estimates of feature importance often do not identify features that help predict the target<d-cite key="NIPS2019_9167, adebayo2018sanity"></d-cite>.</td>
+      <td style="text-align: center">These methods are slow, requiring numerous perturbations of the input and/or training a new model per explanation. These perturbations may evaluate models where they are not grounded by data.</td>
+      <td style="text-align: center">These methods are slow, requiring numerous perturbations to generate a single explanation. These perturbations may evaluate models where they are not grounded by data.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Of note, both locally linear and perturbation-based methods rely on removing or perturbing features in order to characterize how/if the model’s prediction degrades. 
+While removing important features may affect the prediction of the model, so too can the artifacts introduced by the removal or perturbation procedure.</p>
+
+<p>While we can think of reasons to use each of these methods, none of them seem to satisfy our list of wants, either because they lack fidelity to the data or are too slow to scale to large datasets.</p>
+
+<h3 id="is-there-another-way">Is There Another Way?</h3>
+
+<p>Recently, Amortized Explanation Methods (AEM)<d-cite key="Dabkowski2017, Chen2018, yoon2018invase, schwab2019cxplain"></d-cite> have been introduced to reduce the cost of providing model-agnostic explanations by learning a single global selector model that efficiently identifies the subset of important features in an instance of data with a single forward pass. 
+Amortized explanation methods learn the global selector model by optimizing the fidelity of the explanations to the data.</p>
+
+<p>Let’s look at the following illustration, which exemplifies an amortized  explanation method :</p>
+
+<div class="row justify-content-sm-center">
+    <div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded" src="/assets/img/aem.png" alt="" title="example AEM" />
+    </div>
+</div>
+<div class="caption">
+</div>
+
+<p>Here the selector model ($q_{\text{sel}}$) plays a simple game where it tries to select features which allow the predictor model ($q_{\text{pred}}$) to predict the target.
+This game aims to maximize the fidelity of the explanations directly. 
+This game is captured by maximizing the follow amortized explanation method objective:</p>
+
+\[\mathcal{L}_{AEM} = \mathbb{E}_{x, y \sim F}\mathbb{E}_{s \sim q_{\text{sel}; \beta}(s \mid x ; \beta)}\left[\log q_{\text{pred}}(y \mid m(x, s) ; \theta) - \lambda R(s) \right].\]
+
+<p>Here selector model ($q_{\text{sel}}$) is optimized to produce selections $s$ that maximize the likelihood of the masked data $\log q_{\text{pred}}(y \mid m(x, s) ; \theta)$. 
+Then in order to ensure that the explanation is simple (presents a small set of important features) the objective pays a penalty for selecting each feature, expressed as $\lambda R(s)$.</p>
+
+<p>You might be thinking…</p>
+
+<h3 id="whats-the-catch">What’s the Catch?</h3>
+
+<p>Well, first we have to choose the predictor model.
+ We can either use an existing prediction model, which <span style="color:red"> may not work well with the artifacts introduced by the masking process (i.e. occlusion to 0.) text</span>, or train a new model, which <span style="color:red"> requires care.</span></p>
+
+<p>A few popular joint amortized explanation methods (JAMs) such as L2X<d-cite key="Chen2018"></d-cite> and INVASE<d-cite key="yoon2018invase"></d-cite> train a new predictor model by learning it jointly with selector model. 
+Now the selector and predictor model are playing the game together. 
+The selector model tries to select features and the predictor tries to use the masked feature selections to predict the target.</p>
+
+<p>Let’s take a look at how this can go wrong:</p>
+
+<div class="row justify-content-sm-center">
+    <div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded" src="/assets/img/jam_encoding.png" alt="" title="JAM encoding" />
+    </div>
+</div>
+<div class="caption">
+</div>
+
+<p>In the above example, we see that these joint amortized explanation methods can learn to encode predictions. 
+Here the selector model can select a pixel on the left to indicate dog and select a pixel on the right to indicate cat. 
+Because the predictor is trained jointly, it can learn these encodings. 
+Now, remember that the objective penalizes us for each pixel/feature selection. 
+This encoding solution allows for accurate predictions with just a single pixel selection, helping to maximize the amortized objective.</p>
+
+<p>Presented strange explanations like this in clinical settings can lead physicians to quickly loose trust. 
+We need a way to validate the fidelity of the explanations.</p>
+
+<h3 id="can-we-evaluate-the-explanations-eval-x">Can We Evaluate the Explanations? (Eval-X)</h3>
+
+<p>Well, first we have to choose an evaluator model with which to evaluate the subset of important features identified by the interpretability method.
+We can either use an existing prediction model, which <span style="color:red"> may not work well with the artifacts introduced by the masking process (i.e. occlusion to 0.), </span> or train a new model, which <span style="color:red"> requires care.</span></p>
+
+<p>Are you getting de-ja-vu?</p>
+
+<p>Popularly, RemOve And Retrain (ROAR)<d-cite key="NIPS2019_9167"></d-cite> was introduced to evaluate selections. 
+ROAR retrains a model to make predictions from the explanations, provided as masked inputs. 
+However, the joint training procedure can encode the prediction directly in the explanation. 
+ROAR would simply train a model to learn these encodings, incorrectly validating the explanations. 
+Are you getting de-ja-vu, again?</p>
+
+<p>Instead, we recently introduced Eval-X. 
+Lets look at how Eval-X works.</p>
+<div class="row justify-content-sm-center">
+    <div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded" src="/assets/img/evalx.png" alt="" title="Eval-X" />
+    </div>
+</div>
+<div class="caption">
+</div>
+<p>Eval-X works by training a new evaluation model to approximate the true probability of the target given any subset of features in the input. 
+Eval-X adopts a simple training procedure to learn this model by randomly selecting features during training. 
+This procedure exposes the model to the same masking artifacts it will encounter during test time and ensures that the model cannot learn encodings.</p>
+
+<h3 id="real-x-let-us-explain">Real-X, Let us Explain!</h3>
+
+<p>Given that Eval-X is robust to encodings and out-of-distribution artifacts, you might be wondering… is there a way use this approach to create a new amortized explanation method? 
+Accordingly, we recently introduced Real-X, a novel amortized explanation method!
+Lets look at how Real-X works. (more de-ja-vu)</p>
+<div class="row justify-content-sm-center">
+    <div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded" src="/assets/img/realx.png" alt="" title="Real-X" />
+    </div>
+</div>
+<div class="caption">
+</div>
+<p>Real-X works by first training a new predictor model to approximate the true probability of the target given any subset of features in the input using the same procedure as Eval-X. 
+Real-X then trains a selector model to select minimal feature subsets that maximizes the likelihood of the target, as measured by the Eval-X style predictor model.
+This prevents the selector model from learning encodings.</p>
+
+<p>Real-X accomplishes the following:</p>
+<ol>
+  <li>Provides fast explanations with a single forward pass</li>
+  <li>Maximizes explanation fidelity/accuracy</li>
+  <li>Provides simple explanations by selecting the minimal set of important features.</li>
+</ol>
+
+<h3 id="do-real-x-and-eval-x-really-work">Do Real-X and Eval-X Really Work?</h3>
+
+<p>Before we can even think about using Real-X and Eval-X in the clinic we need to test the following claims:</p>
+<ol>
+  <li>Real-X provides fast explanations without encoding</li>
+  <li>Eval-X can detect encoding issues</li>
+</ol>
+
+<p>To do so, lets see how Real-X stacks up against other amortized explanation methods and whether or not Eval-X can detect encodings. 
+Well take a look at:</p>
+<ul>
+  <li>L2X (Learning to Explain)<d-cite key="Chen2018"></d-cite></li>
+  <li>INVASE<d-cite key="yoon2018invase"></d-cite></li>
+  <li>BASE-X (Copies Real-X score function gradient estimation technique REBAR, but is a an amortized explanation method that learns the selector and predictor models jointly)</li>
+  <li>FULL = A model trained on the full feature set.</li>
+</ul>
+
+<p>To make the comparison concrete, our goal is to provide simple explanations by selecting as few features as possible while retaining our ability to predict.</p>
+
+<!-- Fundamentally, theres a trade-off between how simple the explanation in term of the number of features selected and how much these features help with the prediction problem.
+This is a choice the practitioner has to make.
+- We chose to tune each method to select the fewest number of features while ensuring that the accuracy (ACC) is within 5% of the original model. -->
+
+<h4 id="evaluation">Evaluation:</h4>
+
+<p>Each amortized  explanation method  we consider first makes selections, then uses those selections to predict the target using is predictor model.
+The predictive performance of the amortized explanation method is supposed to provide us with a metric of how good the explanations are. 
+We’ll consider the following metrics: area under the receiver operator curve (AUROC) and accuracy (ACC).</p>
+
+<p>We’ll also look at the predictions that Eval-X produces given each method’s explanations.
+Let’s denote these metrics with a prefix “e”: eAUROC and eACC.</p>
+
+<blockquote>
+  <p>If the amortized  explanation method  is encoding, then we would expect high AUROC/ACC and low eAUROC/eACC.</p>
+</blockquote>
+
+<p>Now lets see how well each method is able to explain Chest X-Rays.</p>
+
+<h4 id="cardiomegaly-classification-from-chest-x-rays">Cardiomegaly Classification from Chest X-Rays</h4>
+
+<p>Cardiomegaly is characterized by an enlarged heart and can be diagnosed by measuring the maximal horizontal diameter of the heart relative to that of the chest cavity and assessing the contour of the heart. 
+Given this, we expect to see selections that establish the margins of the heart and chest cavity.</p>
+
+<p>We used the The NIH ChestX-ray8 Dataset<d-cite key="Wang_2017"></d-cite></p>
+
+<!-- - Subset of 5, 600 X-rays = 2,776 Cardiomegaly and 2,824 Normal
+- 5,000: 300: 300 Train, Val, Test Split
+- UNet Selector and DenseNet121 Predictor 
+- Super-pixel selections
+- Training: 50 epochs using a learning rate of .0001
+- Tunned the hyperparameter controlling the number of features selected for each method -->
+
+<p>Let’s take a look at some randomly selected explanations from each method.</p>
+
+<div class="row justify-content-sm-center">
+    <div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded" src="/assets/img/cxr_2.png" alt="" title="CXR_2" />
+    </div>
+</div>
+<div class="row justify-content-sm-center">
+    <div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded" src="/assets/img/cxr_1.png" alt="" title="CXR_1" />
+    </div>
+</div>
+
+<div class="caption">
+    The important regions identified by each explanation method  are over-layed upon each Chest X-Ray in red.
+</div>
+
+<p>An initial review of these samples suggests that L2X, INVASE, and BASE-X may be making some selections that don’t appear to establish the margins of the heart, the margins of the chest wall, nor the contour of the heart. 
+Real-X on the other hand appears to be in line with our intuition of what should be important.
+However, we can’t be sure without additional evaluation.</p>
+
+<p>Now, lets take a look at the in-built and EVAL-X evaluation metrics:</p>
+<div class="row justify-content-sm-center">
+    <div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded" src="/assets/img/cxr_results.png" alt="" title="CXR results" />
+    </div>
+</div>
+<div class="caption">
+</div>
+<p>All the explanation methods provide explanations that are highly predictive when assess directly by the method. 
+However, Eval-X is able to reveal that L2X, INVASE, and BASE-X are all encoding the predictions in their explanations, achieving eACC ~50%.
+Meanwhile, the sections made by Real-X remain fairly predictive when evaluated by Eval-X.</p>
+
+<p>Finally, let’s look at what two expert radiologists thought of the explanations generated by each method.</p>
+<blockquote>
+  <p>We randomly selected 50 Chest X-rays from the test set and displayed the selections made by each method for each X-ray in a random order. The radiologists ranked the four options provided.</p>
+</blockquote>
+
+<div class="row justify-content-sm-center">
+    <div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded" src="/assets/img/cxr_doctor.png" alt="" title="CXR doctor" />
+    </div>
+</div>
+<div class="caption">
+    Average rankings by expert radiologists.
+</div>
+
+<p>From this, we see that the physicians tended to choose the selections generated by Real-X.</p>
+
+<h3 id="how-to-implement-real-x">How to Implement Real-X?</h3>
+
+<p><a href="https://github.com/rajesh-lab/realx">Get our code off Github</a></p>
+
+<p>Explaining with Real-X involves three steps:</p>
+
+<ol>
+  <li>Initialize the selector model and predictor model. (Any model architecture can be specified)</li>
+  <li>Choose the Real-X hyperparameter (lambda) and any other training hyperparameters (i.e. batch_size)</li>
+  <li>Train the predictor and the selector model.</li>
+</ol>
+
+<p>Once Real-X can been trained, its selector model can be used directly to generate explanations. Real-X explanations can also be validated with Eval-X (built-in).</p>
+
+<p>Please, check out our <a href="https://github.com/rajesh-lab/realx/blob/main/example.ipynb">example</a> to see how we apply Real-X to explain MNIST classifications.</p>
+
+<!-- #### Training Real-X
+
+This implementation of Real-X is designed to work with the Keras API.
+
+
+<d-code block language="python">
+    # initialize REALX w/ the selector model, predictor_model, 
+    # and Real-X hyperparameter (lambda)
+    realx = REALX(selector_model, predictor_model, lambda)
+</d-code>
+
+ 
+<d-code block language="python">
+ # train the predictor and selector model
+realx.predictor.compile(loss=...,
+                        optimizer=...,
+                        metrics=...)
+realx.predictor.fit(x_train,
+                    y_train,
+                    epochs=...,
+                    batch_size=...)
+realx.build_selector()
+realx.selector.compile(loss=None,
+                       optimizer=...,
+                       metrics=...)
+realx.selector.fit(x_train,
+                    y_train,
+                    epochs=...,
+                    batch_size=...)
+</d-code>
+
+#### Generating Explanations with Real-X
+<d-code block language="python">
+ # generate explanations
+ explainations = realx.select(x_test, batch_size, discrete=True)
+</d-code>
+ 
+### Evaluating Explanations with Eval-X
+<d-code block language="python">
+ # evaluate explanations with Eval-X
+realx.evalx.compile(loss=...,
+                        optimizer=...,
+                        metrics=...)
+realx.evalx.fit(x_train,
+                    y_train,
+                    epochs=...,
+                    batch_size=...)
+y_eval = realx.evaluate(x_test, batch_size)
+
+eAUROC = roc_auc_score(y_test, y_eval, 'micro')
+eACC = accuracy_score(y_test.argmax(1), y_eval.argmax(1))
+</d-code>
+
+
+<script type="text/bibliography">
+  @article{gregor2015draw,
+    title={DRAW: A recurrent neural network for image generation},
+    author={Gregor, Karol and Danihelka, Ivo and Graves, Alex and Rezende, Danilo Jimenez and Wierstra, Daan},
+    journal={arXivreprint arXiv:1502.04623},
+    year={2015},
+    url={https://arxiv.org/pdf/1502.04623.pdf},
+  }
+</script> -->
+
+      </d-article>
+
+      <d-appendix>
+        <d-footnote-list></d-footnote-list>
+        <d-citation-list></d-citation-list>
+      </d-appendix>
+
+    </div>
+
+    <!-- Footer -->
+
+    
+<footer class="fixed-bottom">
+  <div class="container mt-0">
+    &copy; Copyright 2021 Neil  Jethani.
+    Powered by <a href="http://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>.
+
+    
+    
+  </div>
+</footer>
+
+
+
+  </body>
+
+  <d-bibliography src="/assets/bibliography/realx.bib">
+  </d-bibliography>
+
+</html>
